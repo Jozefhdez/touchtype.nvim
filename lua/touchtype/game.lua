@@ -1,5 +1,6 @@
 local M = {}
 
+-- Function to start the game
 function M.start()
 	local ui = require("touchtype.ui")
 	ui.open_window()
