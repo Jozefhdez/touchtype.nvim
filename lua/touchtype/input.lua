@@ -1,3 +1,4 @@
+-- ~/touchtype.nvim/lua/touchtype/input.lua
 local M = {}
 
 local ns = vim.api.nvim_create_namespace("TouchTypeHL")
@@ -16,7 +17,7 @@ function M.on_input_changed(buf)
 		local hl_group = (char == target_char) and "DiffAdd" or "DiffDelete" -- Highlight group
 		vim.api.nvim_buf_add_highlight(buf, ns, hl_group, 1, i - 1, i) -- Highlight the character in the second line
 	end
-    M.check_result(#input, #target)
+	M.check_result(#input, #target)
 end
 
 function M.check_result(length_input, length_target)

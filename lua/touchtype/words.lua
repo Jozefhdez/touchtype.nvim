@@ -1,5 +1,4 @@
--- This script generates a list of words from a predefined set
-
+-- ~/touchtype.nvim/lua/touchtype/words.lua
 local M = {}
 
 -- Predefined set of words
@@ -33,11 +32,11 @@ function M.get_words(amount_words)
 	local string_words = ""
 
 	for _ = 1, amount_words do
-        if _ < amount_words then
-            string_words = string_words .. words[math.random(1, #words)] .. " "
-        else
-            string_words = string_words .. words[math.random(1, #words)] -- Last word without trailing space
-        end
+		if _ < amount_words then
+			string_words = string_words .. words[math.random(1, #words)] .. " "
+		else
+			string_words = string_words .. words[math.random(1, #words)] -- Last word without trailing space
+		end
 	end
 
 	return string_words
@@ -50,3 +49,4 @@ function M.get_game_words(amount_words)
 end
 
 return M
+

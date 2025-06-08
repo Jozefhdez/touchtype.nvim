@@ -1,3 +1,4 @@
+-- ~/touchtype.nvim/lua/touchtype/game.lua
 local M = {}
 
 -- Function to start the game
