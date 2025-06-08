@@ -55,11 +55,13 @@ function M.results_window()
 
 	local buf = vim.api.nvim_create_buf(false, true)
 	local input = require("touchtype.input")
+	local errors = input.error_count
 
 	-- Fill the buffer with content
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		"Results",
-		"",
+		"Words per minute: ",
+		"Mistakes:" .. errors,
 	})
 
 	vim.api.nvim_buf_set_option(buf, "modifiable", false)
