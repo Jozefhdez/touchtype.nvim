@@ -2,9 +2,11 @@
 local M = {}
 
 local ns = vim.api.nvim_create_namespace("TouchTypeHL")
+M.input_text = ""
 
 function M.on_input_changed(buf)
 	local input = vim.api.nvim_buf_get_lines(buf, 1, 2, false)[1]
+    M.input_text = input
 	vim.api.nvim_buf_set_lines(buf, 1, 2, false, { input })
 
 	-- Capture the target line from the first line of the buffer
@@ -27,6 +29,8 @@ end
 function M.check_result(length_input, length_target)
 	if length_input == length_target then
 		local ui = require("touchtype.ui")
+        local utils = require("touchtype.utils")
+        utils.end_timer()
 		ui.results_window()
 	end
 end

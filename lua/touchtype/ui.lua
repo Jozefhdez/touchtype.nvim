@@ -45,6 +45,8 @@ function M.open_window()
 		buf,
 		buf
 	))
+
+	vim.cmd("startinsert")
 end
 
 function M.results_window()
@@ -54,17 +56,31 @@ function M.results_window()
 	end
 
 	local buf = vim.api.nvim_create_buf(false, true)
+
+	-- Calculate the eror count
 	local input = require("touchtype.input")
 	local errors = input.error_count
+	
+	-- Calculate the elapsed time and words per minute
+	local utils = require("touchtype.utils")
+	local wpm = utils.calculate_wpm(input.input_text, utils.get_elapsed_seconds())
 
 	-- Fill the buffer with content
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		"Results",
 		"Words per minute: ",
 		"Mistakes:" .. errors,
+		"Time elapsed: " .. utils.get_elapsed_seconds() .. " seconds",
+		"Words per minute: " .. wpm,
+		"Press :q to close",
 	})
 
+	-- Make buffer read-only
+	vim.api.nvim_buf_set_option(buf, "readonly", true)
 	vim.api.nvim_buf_set_option(buf, "modifiable", false)
+    vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+    vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+    vim.api.nvim_buf_set_option(buf, "swapfile", false)
 
 	local ui = vim.api.nvim_list_uis()[1]
 	local width = ui.width - 10
@@ -80,6 +96,8 @@ function M.results_window()
 		style = "minimal",
 		border = "rounded",
 	})
+
+	vim.api.nvim_command("stopinsert")
 end
 
 return M
