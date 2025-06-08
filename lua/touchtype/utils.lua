@@ -5,16 +5,16 @@ M.start_time = nil
 M.end_time = nil
 
 function M.start_timer()
-    M.start_time = vim.loop.hrtime() -- tiempo en nanosegundos
+    M.start_time = vim.loop.hrtime() -- This is nanoseconds btw
 end
 
 function M.end_timer()
-    M.end_time = vim.loop.hrtime()
+    M.end_time = vim.loop.hrtime() -- This is nanoseconds btw
 end
 
 function M.get_elapsed_seconds()
     if M.start_time and M.end_time then
-        return (M.end_time - M.start_time) / 1e9 -- convierte a segundos
+        return (M.end_time - M.start_time) / 1e9 -- Convert nanoseconds to seconds
     end
     return 0
 end
