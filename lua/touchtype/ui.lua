@@ -12,7 +12,7 @@ function M.open_window()
 	local input = require("touchtype.input")
 
 	-- Fill the buffer with content
-	local words_line = require("touchtype.words").get_game_words(10)
+	local words_line = require("touchtype.words").get_game_words(50)
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		words_line,
 		"", -- User input
