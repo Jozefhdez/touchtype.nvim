@@ -1,6 +1,6 @@
 -- ~/touchtype.nvim/lua/touchtype/words.lua
 
--- TODO: Change the way words are selected, insted of getting them from an array do it from bigger pool (csv)
+-- TODO: Change the way words are selected, instead of getting them from an array do it from bigger pool (csv)
 local M = {}
 
 -- Predefined set of words
