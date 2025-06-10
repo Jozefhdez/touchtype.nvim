@@ -13,6 +13,14 @@ local function format_time(seconds)
 	return string.format("%02d:%02d", mins, secs)
 end
 
+local function stop_timer()
+	if timer then
+		timer:stop()
+		timer:close()
+		timer = nil
+	end
+end
+
 function M.open_window()
 	-- TODO: Add menu to pick a maximum time add punctuations and numbers
 	-- TODO: Add selection of game modes (time mode, amount of words needed to end current try)
@@ -23,10 +31,9 @@ function M.open_window()
 	local input = require("touchtype.input")
 
 	-- Fill the buffer with words
-	local words_line = require("touchtype.words").get_game_words(5)
+	local words_line = require("touchtype.words").get_game_words(50)
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		words_line,
-		"", -- User input
 		"00:00", -- Timer
 	})
 
@@ -45,25 +52,15 @@ function M.open_window()
 		style = "minimal",
 		border = "rounded",
 	})
-	game_win_id = win
-	-- Set cursor on line 2
-	vim.api.nvim_win_set_cursor(win, { 2, 0 })
 
-	vim.cmd(string.format(
-		[[
-		augroup TouchTypeInput
-			autocmd!
-			autocmd TextChangedI <buffer=%d> lua require('touchtype.input').on_input_changed(%d)
-		augroup END
-	]],
-		buf,
-		buf
-	))
+	game_win_id = win
+	vim.api.nvim_win_set_cursor(win, { 1, 0 })
+	input.reset_input()
+	input.setup_keymaps(buf)
 
 	vim.cmd("startinsert")
 
 	elapsed_seconds = 0
-
 	timer = vim.loop.new_timer()
 	timer:start(
 		0,
@@ -73,7 +70,7 @@ function M.open_window()
 
 			if buf and vim.api.nvim_buf_is_valid(buf) then
 				-- Updates third line
-				vim.api.nvim_buf_set_lines(buf, 2, 3, false, { format_time(elapsed_seconds) })
+				vim.api.nvim_buf_set_lines(buf, 1, 2, false, { format_time(elapsed_seconds) })
 			end
 		end)
 	)
@@ -147,14 +144,6 @@ function M.results_window()
 	})
 	game_win_id = win
 	vim.api.nvim_command("stopinsert")
-end
-
-local function stop_timer()
-    if timer then
-        timer:stop()
-        timer:close()
-        timer = nil
-    end
 end
 
 return M
