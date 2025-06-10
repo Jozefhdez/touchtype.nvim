@@ -4,15 +4,14 @@ local M = {}
 local game_win_id = nil
 
 function M.open_window()
-	-- TODO: Add restart keybind
 	-- TODO: Add timer
 	-- TODO: Add menu to pick a timer add punctuations and numbers
 	-- TODO: Add selection of game modes (time mode, amount of words needed to end current try)
 	local buf = vim.api.nvim_create_buf(false, true)
 	local input = require("touchtype.input")
 
-	-- Fill the buffer with content
-	local words_line = require("touchtype.words").get_game_words(50)
+	-- Fill the buffer with words
+	local words_line = require("touchtype.words").get_game_words(5)
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		words_line,
 		"", -- User input
@@ -37,7 +36,6 @@ function M.open_window()
 	-- Set cursor on line 2
 	vim.api.nvim_win_set_cursor(win, { 2, 0 })
 
-	-- Set cursor on the second line
 	vim.cmd(string.format(
 		[[
 		augroup TouchTypeInput
@@ -50,6 +48,17 @@ function M.open_window()
 	))
 
 	vim.cmd("startinsert")
+end
+
+function M.close_window()
+	if game_win_id and vim.api.nvim_win_is_valid(game_win_id) then
+		vim.api.nvim_win_close(game_win_id, true)
+		game_win_id = nil
+	end
+end
+
+function M.is_window_open()
+	return game_win_id and vim.api.nvim_win_is_valid(game_win_id)
 end
 
 function M.results_window()
@@ -102,7 +111,7 @@ function M.results_window()
 		style = "minimal",
 		border = "rounded",
 	})
-
+	game_win_id = win
 	vim.api.nvim_command("stopinsert")
 end
 

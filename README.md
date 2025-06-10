@@ -49,7 +49,8 @@ or call the Lua function:
 - A floating window will appear with words to type.
 - Type the words in the input line (second line).
 - When you finish typing (matching the length of the target), the results window will appear.
-- Press `:q` to close the results window.
+- If you want to restart use `:R`
+- Use `:q` to close the results window.
 
 ---
 
