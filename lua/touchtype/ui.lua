@@ -2,8 +2,6 @@
 local M = {}
 
 local game_win_id = nil
-local timer_win_id = nil
-local timer_buf_id = nil
 local timer = nil
 local elapsed_seconds = 0
 
