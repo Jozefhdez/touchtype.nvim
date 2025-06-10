@@ -2,11 +2,23 @@
 local M = {}
 
 local game_win_id = nil
+local timer_win_id = nil
+local timer_buf_id = nil
+local timer = nil
+local elapsed_seconds = 0
+
+local function format_time(seconds)
+	local mins = math.floor(seconds / 60)
+	local secs = seconds % 60
+	return string.format("%02d:%02d", mins, secs)
+end
 
 function M.open_window()
-	-- TODO: Add timer
-	-- TODO: Add menu to pick a timer add punctuations and numbers
+	-- TODO: Add menu to pick a maximum time add punctuations and numbers
 	-- TODO: Add selection of game modes (time mode, amount of words needed to end current try)
+
+	stop_timer()
+
 	local buf = vim.api.nvim_create_buf(false, true)
 	local input = require("touchtype.input")
 
@@ -15,6 +27,7 @@ function M.open_window()
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		words_line,
 		"", -- User input
+		"00:00", -- Timer
 	})
 
 	-- Get current editor size
@@ -48,6 +61,22 @@ function M.open_window()
 	))
 
 	vim.cmd("startinsert")
+
+	elapsed_seconds = 0
+
+	timer = vim.loop.new_timer()
+	timer:start(
+		0,
+		1000,
+		vim.schedule_wrap(function()
+			elapsed_seconds = elapsed_seconds + 1
+
+			if buf and vim.api.nvim_buf_is_valid(buf) then
+				-- Updates third line
+				vim.api.nvim_buf_set_lines(buf, 2, 3, false, { format_time(elapsed_seconds) })
+			end
+		end)
+	)
 end
 
 function M.close_window()
@@ -55,6 +84,8 @@ function M.close_window()
 		vim.api.nvim_win_close(game_win_id, true)
 		game_win_id = nil
 	end
+
+	stop_timer()
 end
 
 function M.is_window_open()
@@ -66,6 +97,9 @@ function M.results_window()
 	-- TODO: Add acc in %
 	-- TODO: Add graph of stats (similar to monkeytype)
 	-- TODO: Make a play again keybind
+
+	stop_timer()
+
 	if game_win_id and vim.api.nvim_win_is_valid(game_win_id) then
 		vim.api.nvim_win_close(game_win_id, true)
 		game_win_id = nil
@@ -113,6 +147,14 @@ function M.results_window()
 	})
 	game_win_id = win
 	vim.api.nvim_command("stopinsert")
+end
+
+local function stop_timer()
+    if timer then
+        timer:stop()
+        timer:close()
+        timer = nil
+    end
 end
 
 return M
