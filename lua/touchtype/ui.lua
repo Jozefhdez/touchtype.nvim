@@ -4,6 +4,10 @@ local M = {}
 local game_win_id = nil
 
 function M.open_window()
+	-- TODO: Add restart keybind
+	-- TODO: Add timer
+	-- TODO: Add menu to pick a timer add punctuations and numbers
+	-- TODO: Add selection of game modes (time mode, amount of words needed to end current try)
 	local buf = vim.api.nvim_create_buf(false, true)
 	local input = require("touchtype.input")
 
@@ -30,7 +34,6 @@ function M.open_window()
 		border = "rounded",
 	})
 	game_win_id = win
-
 	-- Set cursor on line 2
 	vim.api.nvim_win_set_cursor(win, { 2, 0 })
 
@@ -50,6 +53,9 @@ function M.open_window()
 end
 
 function M.results_window()
+	-- TODO: Add acc in %
+	-- TODO: Add graph of stats (similar to monkeytype)
+	-- TODO: Make a play again keybind
 	if game_win_id and vim.api.nvim_win_is_valid(game_win_id) then
 		vim.api.nvim_win_close(game_win_id, true)
 		game_win_id = nil
@@ -60,7 +66,7 @@ function M.results_window()
 	-- Calculate the eror count
 	local input = require("touchtype.input")
 	local errors = input.error_count
-	
+
 	-- Calculate the elapsed time and words per minute
 	local utils = require("touchtype.utils")
 	local wpm = utils.calculate_wpm(input.input_text, utils.get_elapsed_seconds())
@@ -68,7 +74,6 @@ function M.results_window()
 	-- Fill the buffer with content
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		"Results",
-		"Words per minute: ",
 		"Mistakes:" .. errors,
 		"Time elapsed: " .. utils.get_elapsed_seconds() .. " seconds",
 		"Words per minute: " .. wpm,
@@ -78,9 +83,9 @@ function M.results_window()
 	-- Make buffer read-only
 	vim.api.nvim_buf_set_option(buf, "readonly", true)
 	vim.api.nvim_buf_set_option(buf, "modifiable", false)
-    vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
-    vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-    vim.api.nvim_buf_set_option(buf, "swapfile", false)
+	vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+	vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+	vim.api.nvim_buf_set_option(buf, "swapfile", false)
 
 	local ui = vim.api.nvim_list_uis()[1]
 	local width = ui.width - 10

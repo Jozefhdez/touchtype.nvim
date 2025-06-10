@@ -1,4 +1,6 @@
 -- ~/touchtype.nvim/lua/touchtype/words.lua
+
+-- TODO: Change the way words are selected, insted of getting them from an array do it from bigger pool (csv)
 local M = {}
 
 -- Predefined set of words
@@ -49,4 +51,3 @@ function M.get_game_words(amount_words)
 end
 
 return M
-
