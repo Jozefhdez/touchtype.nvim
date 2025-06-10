@@ -53,6 +53,7 @@ function M.open_window()
 end
 
 function M.results_window()
+	-- TODO: Improve visuals
 	-- TODO: Add acc in %
 	-- TODO: Add graph of stats (similar to monkeytype)
 	-- TODO: Make a play again keybind

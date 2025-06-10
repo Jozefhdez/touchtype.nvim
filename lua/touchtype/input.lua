@@ -1,4 +1,7 @@
 -- ~/touchtype.nvim/lua/touchtype/input.lua
+
+-- TODO: Make the input line be on top of target line, making it easier to follow for user (take monkeytype as reference)
+
 local M = {}
 
 local ns = vim.api.nvim_create_namespace("TouchTypeHL")

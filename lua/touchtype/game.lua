@@ -8,7 +8,7 @@ function M.start()
 
 	-- Start the timer
 	utils.start_timer()
-	
+
 	-- Open the game window
 	ui.open_window()
 end
