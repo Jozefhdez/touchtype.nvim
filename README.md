@@ -27,6 +27,10 @@ Use your favorite plugin manager. Example with [lazy.nvim](https://github.com/fo
 ```lua
 {
   "jozefhdez/touchtype.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+        require("touchtype").setup()
+    end,
 }
 ```
 

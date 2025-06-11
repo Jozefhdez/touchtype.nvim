@@ -1,4 +1,7 @@
 -- ~/touchtype.nvim/lua/touchtype/ui.lua
+
+local popup = require("plenary.popup")
+
 local M = {}
 
 local game_win_id = nil
@@ -120,27 +123,29 @@ function M.results_window()
 	})
 
 	-- Make buffer read-only
-	vim.api.nvim_buf_set_option(buf, "readonly", true)
-	vim.api.nvim_buf_set_option(buf, "modifiable", false)
-	vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
-	vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-	vim.api.nvim_buf_set_option(buf, "swapfile", false)
+	vim.bo[buf].readonly = true
+	vim.bo[buf].modifiable = false
+	vim.bo[buf].buftype = "nofile"
+	vim.bo[buf].bufhidden = "wipe"
+	vim.bo[buf].swapfile = false
 
-	local ui = vim.api.nvim_list_uis()[1]
-	local width = ui.width - 10
-	local height = ui.height - 10
+	local width = 30
+	local height = 20
+	local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
+	local row = math.floor((vim.o.lines - height) / 2)
+	local col = math.floor((vim.o.columns - width) / 2)
 
 	-- Configure floating window to take full screen
-	local win = vim.api.nvim_open_win(buf, true, {
-		relative = "editor",
-		width = width,
-		height = height,
-		row = 2,
-		col = 2,
-		style = "minimal",
-		border = "rounded",
+	game_win_id = popup.create(buf, {
+		title = "Result",
+		highlight = "NormalFloat",
+		line = row,
+		col = col,
+		minwidth = width,
+		minheight = height,
+		borderchars = borderchars,
 	})
-	game_win_id = win
+
 	vim.api.nvim_command("stopinsert")
 end
 
