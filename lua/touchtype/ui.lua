@@ -117,7 +117,7 @@ function M.results_window()
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
 		"Results",
 		"Mistakes:" .. errors,
-		"Time elapsed: " .. utils.get_elapsed_seconds() .. " seconds",
+		"Time: " .. utils.get_elapsed_seconds() .. "(s)",
 		"Words per minute: " .. wpm,
 		"Press :q to close",
 	})
@@ -129,8 +129,8 @@ function M.results_window()
 	vim.bo[buf].bufhidden = "wipe"
 	vim.bo[buf].swapfile = false
 
-	local width = 30
-	local height = 20
+	local width = 40
+	local height = 30
 	local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
 	local row = math.floor((vim.o.lines - height) / 2)
 	local col = math.floor((vim.o.columns - width) / 2)
