@@ -120,6 +120,7 @@ function M.results_window()
 		"Time: " .. utils.get_elapsed_seconds() .. "(s)",
 		"Words per minute: " .. wpm,
 		"Press :q to close",
+		"Press :R to play again",
 	})
 
 	-- Make buffer read-only
