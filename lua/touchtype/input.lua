@@ -5,13 +5,16 @@ local M = {}
 local ns = vim.api.nvim_create_namespace("TouchTypeHL")
 M.input_text = ""
 M.error_count = 0
+M.wrapped_lines = {} -- Store wrapped lines for proper highlighting
 
 function M.reset_input()
 	M.input_text = ""
 	M.error_count = 0
+	M.wrapped_lines = {}
 end
 
-function M.setup_keymaps(buf)
+function M.setup_keymaps(buf, wrapped_lines)
+	M.wrapped_lines = wrapped_lines or {}
 	vim.api.nvim_buf_set_keymap(
 		buf,
 		"i",
@@ -45,18 +48,65 @@ end
 
 function M.update_highlight()
 	local buf = vim.api.nvim_get_current_buf()
-	local target = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
-	M.error_count = 0
-	vim.api.nvim_buf_clear_namespace(buf, ns, 0, 1)
-	for i = 1, #M.input_text do
-		local char = M.input_text:sub(i, i)
-		local target_char = target:sub(i, i)
-		local hl_group = (char == target_char) and "DiffAdd" or "DiffDelete"
-		vim.api.nvim_buf_add_highlight(buf, ns, hl_group, 0, i - 1, i)
-		if char ~= target_char then
-			M.error_count = M.error_count + 1
+	
+	-- Reconstruct the full target text from wrapped lines
+	local target_parts = {}
+	for _, line in ipairs(M.wrapped_lines) do
+		-- Remove the leading spaces from each line
+		local clean_line = line:gsub("^%s*", "")
+		if clean_line ~= "" then
+			table.insert(target_parts, clean_line)
 		end
 	end
+	local target = table.concat(target_parts, " ")
+	
+	if not target or target == "" then return end
+	
+	M.error_count = 0
+	
+	-- Clear highlights on all wrapped lines
+	local words_start_line = 5 -- 0-indexed line where words start
+	for i = 0, #M.wrapped_lines - 1 do
+		vim.api.nvim_buf_clear_namespace(buf, ns, words_start_line + i, words_start_line + i + 1)
+	end
+	
+	-- Apply highlighting across multiple lines
+	local char_pos = 0
+	local target_pos = 1
+	
+	for line_idx, line in ipairs(M.wrapped_lines) do
+		local clean_line = line:gsub("^%s*", "")
+		local prefix_len = #line - #clean_line
+		
+		for char_idx = 1, #clean_line do
+			if target_pos <= #M.input_text then
+				local input_char = M.input_text:sub(target_pos, target_pos)
+				local target_char = target:sub(target_pos, target_pos)
+				local hl_group
+				
+				if input_char == target_char then
+					hl_group = "TouchTypeCorrect"
+				else
+					hl_group = "TouchTypeIncorrect"
+					M.error_count = M.error_count + 1
+				end
+				
+				-- Apply highlight with proper line and column positions
+				local line_num = 5 + line_idx - 1 -- 0-indexed buffer line
+				local col_start = prefix_len + char_idx - 1
+				local col_end = prefix_len + char_idx
+				
+				vim.api.nvim_buf_add_highlight(buf, ns, hl_group, line_num, col_start, col_end)
+				target_pos = target_pos + 1
+			end
+		end
+		
+		-- Account for space between words (except for the last line)
+		if line_idx < #M.wrapped_lines and target_pos <= #M.input_text then
+			target_pos = target_pos + 1 -- Skip the space character
+		end
+	end
+	
 	M.check_result(#M.input_text, #target)
 end
 

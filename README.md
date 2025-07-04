@@ -1,22 +1,24 @@
 # touchtype.nvim
 
-**touchtype.nvim** is a minimal touch typing game for Neovim, designed to help you practice typing directly in your editor.  
-This is the first iteration, focusing on simplicity and core functionality.
+**touchtype.nvim** is a beautiful and minimal touch typing game for Neovim, designed to help you practice typing directly in your editor with a modern, visually appealing interface.
 
 ---
 
-## Features
+## ✨ Features
 
-- Opens a floating window with a random set of words.
-- User types their input in a dedicated line.
-- Real-time highlighting:  
-  - Correct characters are shown in green.  
-  - Incorrect characters are shown in red.
-- Results window at the end showing:
-  - Mistakes (uncorrected errors)
-  - Time elapsed
+- 🎨 **Beautiful UI**: Clean, centered floating windows with modern styling and emojis
+- 📝 **Real-time feedback**: Instant character-by-character highlighting
+  - ✅ Green for correct characters  
+  - ❌ Red for incorrect characters
+- 📊 **Comprehensive stats**: 
   - Words per minute (WPM)
-- Fully keyboard-driven, no mouse required.
+  - Accuracy percentage
+  - Error count
+  - Time elapsed
+  - Characters typed
+- 🎯 **Live metrics**: Real-time WPM and error tracking during gameplay
+- ⌨️ **Keyboard-driven**: Fully accessible without mouse
+- 🔄 **Quick restart**: Easy replay functionality
 
 ---
 
@@ -36,7 +38,7 @@ Use your favorite plugin manager. Example with [lazy.nvim](https://github.com/fo
 
 ---
 
-## Usage
+## 🚀 Usage
 
 In Neovim, run:
 
@@ -50,11 +52,29 @@ or call the Lua function:
 :lua require("touchtype.game").start()
 ```
 
-- A floating window will appear with words to type.
-- Type the words in the input line (second line).
-- When you finish typing (matching the length of the target), the results window will appear.
-- If you want to restart use `:R`
-- Use `:q` to close the results window.
+### 🎮 How to play:
+1. A beautiful centered floating window will appear with words to type
+2. Type the words exactly as shown - you'll see real-time feedback with colors
+3. Watch your live WPM and error count in the status bar
+4. When finished, view your detailed results
+5. Press `R` to play again or `q` to quit
+
+### ⌨️ Controls:
+- **Typing**: Just start typing the displayed words
+- **Restart**: `:R` - Quick restart for another round
+- **Quit**: `:q` - Close the results window
+- **Backspace**: Fix mistakes as you type
+
+---
+
+## 🛠️ Roadmap
+
+- [ ] 🎨 Custom color themes and UI customization
+- [ ] 📈 Progress tracking and statistics history  
+- [ ] 📖 Custom word lists and difficulty levels
+- [ ] ⏰ Configurable session length and game modes
+- [ ] 🏆 Achievement system and personal records
+- [ ] 📊 Visual progress graphs (monkeytype-style)
 
 ---
 
